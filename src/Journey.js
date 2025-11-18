@@ -818,13 +818,15 @@ const ComprehensivePTSVisualizer = () => {
     year1Revenue: "€7.5M",
     roi: "1,227%",
     breakEven: "~1 month",
-    costPerConversion: "€0.70",
-    revenuePerEuroSpent: "€4,285",
+    costPerConversion: "€1.25 ",
+    revenuePerEuroSpent: "€13.27",
     assumptions: [
       "50,000 annual configurator visitors",
-      "15% → 20% PTS adoption (+5%)",
+      "15% → 20% PTS adoption (+5% increase)",
       "2,500 incremental buyers × €3,000 avg premium",
-      "10,000 conversations/month at scale",
+      "At scale: 10,000 conversations/month, 20% conversion rate",
+      "€3,000 average PTS premium (includes heritage & PTS Plus)",
+      "Year 1 total investment: €565K (dev + infrastructure)",
     ],
   };
 
@@ -2192,14 +2194,14 @@ const ComprehensivePTSVisualizer = () => {
                 <div className="text-xs text-slate-400">After launch</div>
               </div>
               <div className="bg-gradient-to-br from-amber-900/30 to-orange-900/30 rounded-xl p-6 border border-amber-700/50">
-                <div className="text-4xl font-light mb-2 text-amber-400">
+                <div className="text-4xl font-light mb-2 text-purple-400">
                   {roiMetrics.revenuePerEuroSpent}
                 </div>
                 <div className="text-sm text-slate-300 mb-1">
-                  Revenue per €1 Spent
+                  Revenue per €1 Invested
                 </div>
                 <div className="text-xs text-slate-400">
-                  At scale (10K convos/mo)
+                  Year 1 Return Ratio
                 </div>
               </div>
             </div>
@@ -2464,10 +2466,11 @@ const ComprehensivePTSVisualizer = () => {
                     {roiMetrics.costPerConversion}
                   </div>
                   <div className="text-sm text-slate-300">
-                    Cost per PTS conversion
+                    Infrastructure cost per conversion
                   </div>
                   <div className="text-xs text-slate-400 mt-2">
-                    At 10K conversations/month, 20% conversion
+                    At scale: 120K conversations/year, 20% conversion (24K
+                    conversions)
                   </div>
                 </div>
                 <div className="text-center">
@@ -2481,16 +2484,14 @@ const ComprehensivePTSVisualizer = () => {
                     Value per conversion
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-4xl font-light mb-2 text-purple-400">
-                    {roiMetrics.revenuePerEuroSpent}
-                  </div>
-                  <div className="text-sm text-slate-300">
-                    Revenue per €1 invested
-                  </div>
-                  <div className="text-xs text-slate-400 mt-2">
-                    At steady state
-                  </div>
+                <div className="text-4xl font-light mb-2 text-purple-400">
+                  {roiMetrics.revenuePerEuroSpent}
+                </div>
+                <div className="text-sm text-slate-300">
+                  Revenue per €1 invested (Year 1)
+                </div>
+                <div className="text-xs text-slate-400 mt-2">
+                  €7.5M revenue ÷ €565K investment
                 </div>
               </div>
             </div>
