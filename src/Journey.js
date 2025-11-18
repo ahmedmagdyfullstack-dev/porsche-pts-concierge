@@ -17,7 +17,6 @@ import {
   GitBranch,
   Lock,
   Unlock,
-  X,
 } from "lucide-react";
 
 const ComprehensivePTSVisualizer = () => {
