@@ -18,6 +18,7 @@ import {
   Lock,
   Unlock,
 } from "lucide-react";
+import Demo from "./Demo";
 
 const ComprehensivePTSVisualizer = () => {
   const [activeTab, setActiveTab] = useState("proposal");
@@ -2091,6 +2092,8 @@ const ComprehensivePTSVisualizer = () => {
                 ))}
               </div>
             </div>
+
+            <Demo />
           </div>
         )}
 
