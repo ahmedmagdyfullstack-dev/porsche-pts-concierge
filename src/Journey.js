@@ -1083,7 +1083,7 @@ const ComprehensivePTSVisualizer = () => {
           <div className="flex gap-1 overflow-x-auto">
             {[
               { id: "proposal", label: "Executive Summary", icon: Target },
-              { id: "pricing", label: "Pricing & ROI", icon: DollarSign },
+              // { id: "pricing", label: "Pricing & ROI", icon: DollarSign },
               { id: "expedia", label: "Expedia Benchmarks", icon: BarChart3 },
               { id: "funnel", label: "AI Visibility Funnel", icon: GitBranch },
               {
