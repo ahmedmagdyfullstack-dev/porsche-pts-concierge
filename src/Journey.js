@@ -1093,11 +1093,11 @@ const ComprehensivePTSVisualizer = () => {
               },
               { id: "architecture", label: "Architecture", icon: Database },
               { id: "phases", label: "Implementation", icon: TrendingUp },
-              {
-                id: "partnership",
-                label: "Partnership Model",
-                icon: Briefcase,
-              },
+              // {
+              //   id: "partnership",
+              //   label: "Partnership Model",
+              //   icon: Briefcase,
+              // },
             ].map((tab) => {
               const Icon = tab.icon;
               return (
