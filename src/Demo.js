@@ -7,6 +7,7 @@ const Demo = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [currentStage, setCurrentStage] = useState(1);
   const [isDemoComplete, setIsDemoComplete] = useState(false);
+
   const messagesEndRef = useRef(null);
 
   // Image paths for actual Porsche PTS colors
