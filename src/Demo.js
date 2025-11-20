@@ -295,7 +295,10 @@ const Demo = () => {
   return (
     <div style={styles.body}>
       <div style={styles.header}>
-        <h1 style={styles.headerTitle}>🏎️ Porsche PTS Concierge</h1>
+        <div className="flex items-center">
+          <img src="logo512.png" alt="Logo" className="w-16 h-16" />
+          <h1 style={styles.headerTitle}>Porsche PTS Concierge</h1>
+        </div>
         <p style={styles.headerSubtitle}>Interactive User Experience Demo</p>
         <div style={{ marginTop: "12px" }}>
           <span
