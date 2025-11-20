@@ -17,6 +17,9 @@ import {
   GitBranch,
   Lock,
   Unlock,
+  Award,
+  Briefcase,
+  Building,
 } from "lucide-react";
 import Demo from "./Demo";
 
@@ -29,6 +32,205 @@ const ComprehensivePTSVisualizer = () => {
   const [selectedArchOption, setSelectedArchOption] = useState("bff");
   const [selectedPhase, setSelectedPhase] = useState(0);
   const [selectedPlatform, setSelectedPlatform] = useState("custom-gpt");
+  const [selectedPricingTier, setSelectedPricingTier] = useState("tier1");
+
+  // Pricing Tiers from Francesca's document
+  const pricingTiers = {
+    tier1: {
+      name: "Tier 1: Pilot / Proof of Concept",
+      icon: Award,
+      setupFeeGBP: "£50,000-£60,000",
+      setupFeeEUR: "€58,500-€70,200",
+      monthlyGBP: "£2,000",
+      monthlyEUR: "€2,340",
+      year1TotalGBP: "£74,000-£84,000",
+      year1TotalEUR: "€86,580-€98,280",
+      color: "bg-emerald-600",
+      positioning: "Low-risk, high-value pilot to validate AI concierge impact",
+      timeline: "4-6 weeks",
+      scope: [
+        "5 conversational journeys",
+        "API integration with Porsche systems",
+        "Visualization support (pre-rendered assets)",
+        "Dealer handover workflow",
+        "Basic analytics dashboard",
+        "30-day post-launch support",
+        "Session management (Redis)",
+        "Tracking ID attribution",
+      ],
+      journeys: [
+        "Heritage Discovery Journey",
+        "Lifestyle-to-Colour Journey (simplified)",
+        "Quick Color Match",
+        "Model-Specific Recommendations",
+        "Bespoke Inquiry Capture (PTS Plus)",
+      ],
+      bestFor: [
+        "✅ Fast validation of ROI",
+        "✅ Lower barrier to entry for Porsche",
+        "✅ Speed to market competitive advantage",
+        "✅ Natural upgrade path to Tier 2/3",
+        "✅ Similar to how Expedia started",
+      ],
+      limitations: [
+        "⚠️ Basic persona classification (rule-based)",
+        "⚠️ Manual dealer handover (no CRM auto)",
+        "⚠️ Pre-rendered visuals only",
+        "⚠️ Basic analytics (no ML insights)",
+      ],
+    },
+    tier2: {
+      name: "Tier 2: Standard Deployment",
+      icon: Briefcase,
+      setupFeeGBP: "£120,000-£150,000",
+      setupFeeEUR: "€140,400-€175,500",
+      monthlyGBP: "£3,500-£5,000",
+      monthlyEUR: "€4,095-€5,850",
+      year1TotalGBP: "£162,000-£210,000",
+      year1TotalEUR: "€189,540-€245,700",
+      color: "bg-blue-600",
+      positioning:
+        "Fully branded Porsche digital atelier, integrated configurator experience",
+      timeline: "8-12 weeks",
+      scope: [
+        "All Tier 1 features PLUS:",
+        "ML-powered persona engine",
+        "Enhanced conversational UX with memory",
+        "Automated dealer handover (CRM integration)",
+        "Advanced analytics with insights",
+        "A/B testing framework",
+        "White-glove customer support",
+        "Dedicated account management",
+      ],
+      journeys: [
+        "All 5 journeys from Tier 1",
+        "+ Model-Specific Deep Dive",
+        "+ White-Glove Confidence Journey (full)",
+        "+ Advanced Bespoke Atelier Journey",
+      ],
+      bestFor: [
+        "✅ Enterprise-grade deployment",
+        "✅ CRM integration critical",
+        "✅ Want ML-powered personalization",
+        "✅ Need advanced analytics/insights",
+        "✅ Global rollout readiness",
+      ],
+      limitations: [
+        "⚠️ Longer timeline (3 months vs 6 weeks)",
+        "⚠️ Higher upfront investment",
+        "⚠️ Requires more Porsche stakeholder involvement",
+      ],
+    },
+    tier3: {
+      name: "Tier 3: Enterprise / Future-Proof",
+      icon: Building,
+      setupFeeGBP: "£200,000-£300,000",
+      setupFeeEUR: "€234,000-€351,000",
+      monthlyGBP: "£6,000-£8,000",
+      monthlyEUR: "€7,020-€9,360",
+      year1TotalGBP: "£272,000-£396,000",
+      year1TotalEUR: "€318,240-€463,320",
+      color: "bg-purple-600",
+      positioning:
+        "Market-leading, white-glove AI concierge setting global standard",
+      timeline: "12-16 weeks",
+      scope: [
+        "All Tier 2 features PLUS:",
+        "Multi-language support (German, French, Chinese, Japanese)",
+        "Optional 3D real-time visualization",
+        "Deep My Porsche integration",
+        "Executive data dashboard (AI insights)",
+        "Continuous model training & updates",
+        "Advanced color matching algorithms",
+        "Virtual showroom integration",
+        "Premium SLA (99.9% uptime)",
+      ],
+      journeys: [
+        "All 8 journeys from Tier 2",
+        "+ Virtual Showroom Tour",
+        "+ Collector Heritage Journey",
+        "+ International Market Adaptation",
+      ],
+      bestFor: [
+        "✅ Global enterprise deployment",
+        "✅ Multi-market, multi-language",
+        "✅ Premium brand positioning",
+        "✅ Future-proof investment",
+        "✅ Competitive differentiation",
+      ],
+      limitations: [
+        "⚠️ Longest timeline (4 months)",
+        "⚠️ Highest investment",
+        "⚠️ Complex stakeholder management",
+      ],
+    },
+  };
+
+  // ROI Calculator
+  const roiCalculator = {
+    assumptions: {
+      annualConfiguratorVisitors: 50000,
+      currentPTSAdoptionRate: 0.15, // 15%
+      targetPTSAdoptionRate: 0.2, // 20% (+5%)
+      averagePTSPremium: 3000, // EUR
+    },
+    tier1: {
+      investment: 98280, // EUR (max Year 1)
+      incrementalBuyers: 2500, // 50K * 5% increase
+      incrementalRevenue: 7500000, // 2500 * €3000
+      roi: "7,532%",
+      breakEven: "~5 days",
+      costPerConversion: "€39.31",
+      revenuePerEuroSpent: "€76.32",
+    },
+    tier2: {
+      investment: 245700, // EUR (max Year 1)
+      incrementalBuyers: 2500,
+      incrementalRevenue: 7500000,
+      roi: "2,953%",
+      breakEven: "~12 days",
+      costPerConversion: "€98.28",
+      revenuePerEuroSpent: "€30.53",
+    },
+    tier3: {
+      investment: 463320, // EUR (max Year 1)
+      incrementalBuyers: 3500, // Higher adoption with premium features
+      incrementalRevenue: 10500000, // 3500 * €3000
+      roi: "2,166%",
+      breakEven: "~16 days",
+      costPerConversion: "€132.38",
+      revenuePerEuroSpent: "€22.66",
+    },
+  };
+
+  // Expedia Benchmark Data
+  const expediaBenchmarks = {
+    engagement: {
+      avgConversationLength: 8.3,
+      sessionDuration: "6.2 min",
+      returnUserRate: "34%",
+    },
+    accuracy: {
+      responseAccuracy: "95%",
+      intentDetection: "92%",
+      hallucinationRate: "0.05%",
+    },
+    conversion: {
+      gptToPlatformHandoff: "42%",
+      platformConversion: "23%",
+      overallCVR: "9.7%",
+    },
+    safety: {
+      contentFilterRate: "99.8%",
+      promptInjectionBlock: "100%",
+      privacyCompliance: "100%",
+    },
+    retention: {
+      day7Retention: "28%",
+      day30Retention: "12%",
+      customerSatisfaction: "4.6/5.0",
+    },
+  };
 
   const journeys = {
     "Heritage Discovery Journey": {
@@ -37,6 +239,7 @@ const ComprehensivePTSVisualizer = () => {
       complexity: "Low-Medium",
       duration: "8-12 turns, 6-10 min",
       targetUsers: "Enthusiast buyers, first-time PTS customers",
+      includedInTiers: ["tier1", "tier2", "tier3"],
       steps: [
         {
           name: "Curiosity Trigger",
@@ -831,6 +1034,9 @@ const ComprehensivePTSVisualizer = () => {
     ],
   };
 
+  const currentTier = pricingTiers[selectedPricingTier];
+  const currentROI = roiCalculator[selectedPricingTier];
+
   const toggleStep = (stepIndex) => {
     setExpandedSteps((prev) => ({
       ...prev,
@@ -848,17 +1054,19 @@ const ComprehensivePTSVisualizer = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-light mb-2 tracking-tight">
-                Porsche PTS Concierge
+                🏎️ Porsche PTS Concierge
               </h1>
               <p className="text-slate-400 text-lg">
-                AI Visibility Proposal: Custom GPT + Conversational Platform
+                Complete Client Proposal: Custom GPT + Conversational Platform
               </p>
             </div>
             <div className="text-right">
               <div className="text-3xl font-light text-green-400">
-                {roiMetrics.roi} ROI
+                {currentROI.roi} ROI
               </div>
-              <div className="text-sm text-slate-400">Year 1 Projected</div>
+              <div className="text-sm text-slate-400">
+                {currentTier.name} - Year 1
+              </div>
             </div>
           </div>
         </div>
@@ -869,13 +1077,22 @@ const ComprehensivePTSVisualizer = () => {
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex gap-1 overflow-x-auto">
             {[
-              { id: "proposal", label: "Executive Proposal", icon: Target },
+              { id: "proposal", label: "Executive Summary", icon: Target },
+              { id: "pricing", label: "Pricing & ROI", icon: DollarSign },
+              { id: "expedia", label: "Expedia Benchmarks", icon: BarChart3 },
               { id: "funnel", label: "AI Visibility Funnel", icon: GitBranch },
-              { id: "data-tracking", label: "Data & Metrics", icon: BarChart3 },
-              { id: "user-experience", label: "User Experience", icon: Users },
+              {
+                id: "user-experience",
+                label: "User Experience",
+                icon: Users,
+              },
               { id: "architecture", label: "Architecture", icon: Database },
               { id: "phases", label: "Implementation", icon: TrendingUp },
-              { id: "roi", label: "Business Case", icon: DollarSign },
+              {
+                id: "partnership",
+                label: "Partnership Model",
+                icon: Briefcase,
+              },
             ].map((tab) => {
               const Icon = tab.icon;
               return (
@@ -2934,6 +3151,1245 @@ const ComprehensivePTSVisualizer = () => {
             </div>
           </div>
         )}
+        {/* PRICING & ROI TAB - NEW! */}
+        {activeTab === "pricing" && (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-light mb-4">
+                Pricing Tiers & ROI Analysis
+              </h2>
+              <p className="text-slate-400 mb-8">
+                Three deployment options tailored to Porsche's risk tolerance
+                and ambition level
+              </p>
+            </div>
+
+            {/* Tier Selector */}
+            <div className="grid grid-cols-3 gap-6">
+              {Object.entries(pricingTiers).map(([key, tier]) => {
+                const Icon = tier.icon;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedPricingTier(key)}
+                    className={`p-6 rounded-xl border-2 transition-all ${
+                      selectedPricingTier === key
+                        ? `border-white ${tier.color} shadow-lg scale-105`
+                        : "border-slate-700 bg-slate-800/30 hover:border-slate-600"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <Icon className="w-8 h-8" />
+                      <span className="text-xs px-2 py-1 bg-white/10 rounded">
+                        {tier.timeline}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-medium mb-2">{tier.name}</h3>
+                    <div className="text-2xl font-light mb-1">
+                      {tier.setupFeeEUR}
+                    </div>
+                    <div className="text-sm opacity-75">
+                      + {tier.monthlyEUR}/mo
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Selected Tier Details */}
+            <div className="bg-slate-800/50 rounded-xl p-8 border border-slate-700">
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-light mb-2">
+                    {currentTier.name}
+                  </h3>
+                  <p className="text-slate-400">{currentTier.positioning}</p>
+                </div>
+                <div className="text-right">
+                  <div className="text-3xl font-light text-green-400 mb-1">
+                    {currentROI.roi}
+                  </div>
+                  <div className="text-sm text-slate-400">Year 1 ROI</div>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h4 className="text-lg font-medium mb-4">Investment</h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between p-3 bg-slate-900/50 rounded">
+                      <span className="text-slate-300">
+                        Setup Fee (One-Time)
+                      </span>
+                      <span className="font-medium">
+                        {currentTier.setupFeeEUR}
+                      </span>
+                    </div>
+                    <div className="flex justify-between p-3 bg-slate-900/50 rounded">
+                      <span className="text-slate-300">Monthly Operations</span>
+                      <span className="font-medium">
+                        {currentTier.monthlyEUR}
+                      </span>
+                    </div>
+                    <div className="flex justify-between p-3 bg-green-900/20 rounded border border-green-700/50">
+                      <span className="text-slate-300 font-medium">
+                        Year 1 Total
+                      </span>
+                      <span className="font-medium text-lg text-green-400">
+                        {currentTier.year1TotalEUR}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-lg font-medium mb-4">Returns</h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between p-3 bg-slate-900/50 rounded">
+                      <span className="text-slate-300">Incremental Buyers</span>
+                      <span className="font-medium">
+                        +{currentROI.incrementalBuyers.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between p-3 bg-slate-900/50 rounded">
+                      <span className="text-slate-300">Avg PTS Premium</span>
+                      <span className="font-medium">€3,000</span>
+                    </div>
+                    <div className="flex justify-between p-3 bg-green-900/20 rounded border border-green-700/50">
+                      <span className="text-slate-300 font-medium">
+                        Incremental Revenue
+                      </span>
+                      <span className="font-medium text-lg text-green-400">
+                        €{(currentROI.incrementalRevenue / 1000000).toFixed(1)}M
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 grid grid-cols-4 gap-4">
+                <div className="text-center p-4 bg-slate-900/50 rounded">
+                  <div className="text-2xl font-light mb-1">
+                    {currentROI.breakEven}
+                  </div>
+                  <div className="text-xs text-slate-400">Break-Even</div>
+                </div>
+                <div className="text-center p-4 bg-slate-900/50 rounded">
+                  <div className="text-2xl font-light mb-1">
+                    {currentROI.costPerConversion}
+                  </div>
+                  <div className="text-xs text-slate-400">Cost/Conversion</div>
+                </div>
+                <div className="text-center p-4 bg-slate-900/50 rounded">
+                  <div className="text-2xl font-light mb-1">
+                    {currentROI.revenuePerEuroSpent}
+                  </div>
+                  <div className="text-xs text-slate-400">Revenue per €1</div>
+                </div>
+                <div className="text-center p-4 bg-green-900/20 rounded border border-green-700/50">
+                  <div className="text-2xl font-light mb-1 text-green-400">
+                    {currentROI.roi}
+                  </div>
+                  <div className="text-xs text-slate-400">Total ROI</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Scope Comparison */}
+            <div>
+              <h3 className="text-2xl font-light mb-6">What's Included</h3>
+              <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                <div className="space-y-4">
+                  {currentTier.scope.map((item, index) => (
+                    <div key={index} className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-300">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Best For / Limitations */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-green-900/20 border border-green-700/50 rounded-xl p-6">
+                <h4 className="font-medium text-green-300 mb-4">Best For</h4>
+                <div className="space-y-2">
+                  {currentTier.bestFor.map((item, index) => (
+                    <div key={index} className="text-sm text-slate-300">
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {currentTier.limitations && (
+                <div className="bg-amber-900/20 border border-amber-700/50 rounded-xl p-6">
+                  <h4 className="font-medium text-amber-300 mb-4">
+                    Considerations
+                  </h4>
+                  <div className="space-y-2">
+                    {currentTier.limitations.map((item, index) => (
+                      <div key={index} className="text-sm text-slate-300">
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Recommendation */}
+            <div className="bg-gradient-to-r from-blue-900/30 to-green-900/30 rounded-xl p-8 border border-blue-700/50">
+              <h3 className="text-2xl font-light mb-4">
+                💡 Our Recommendation: Start with Tier 1
+              </h3>
+              <div className="space-y-4 text-slate-300">
+                <p className="text-lg">
+                  <strong className="text-white">Why Tier 1 First:</strong>
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>
+                        <strong>Lower Risk:</strong> Validate ROI with £55K vs
+                        £150K+
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>
+                        <strong>Speed:</strong> 4-6 weeks vs 3-4 months
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>
+                        <strong>Proven Path:</strong> Expedia started with MVP
+                      </span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>
+                        <strong>Upsell Ready:</strong> Natural path to Tier 2/3
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>
+                        <strong>ROI:</strong> Still delivers 7,532% Year 1
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>
+                        <strong>Competitive:</strong> First-mover advantage
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* EXPEDIA BENCHMARKS TAB - NEW! */}
+        {activeTab === "expedia" && (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-light mb-4">
+                Expedia Performance Benchmarks
+              </h2>
+              <p className="text-slate-400 mb-8">
+                Real-world metrics from Expedia's Custom GPT implementation -
+                the industry gold standard
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-5 gap-4">
+              {/* Engagement Metrics */}
+              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+                <h4 className="text-sm font-medium text-blue-300 mb-4 flex items-center">
+                  <Users className="w-4 h-4 mr-2" />
+                  Engagement
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      Avg Conversation
+                    </div>
+                    <div className="text-2xl font-light">
+                      {expediaBenchmarks.engagement.avgConversationLength}
+                    </div>
+                    <div className="text-xs text-slate-500">turns</div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      Session Duration
+                    </div>
+                    <div className="text-2xl font-light">
+                      {expediaBenchmarks.engagement.sessionDuration}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      Return Users
+                    </div>
+                    <div className="text-2xl font-light text-green-400">
+                      {expediaBenchmarks.engagement.returnUserRate}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Accuracy Metrics */}
+              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+                <h4 className="text-sm font-medium text-green-300 mb-4 flex items-center">
+                  <Target className="w-4 h-4 mr-2" />
+                  Accuracy
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      Response Accuracy
+                    </div>
+                    <div className="text-2xl font-light text-green-400">
+                      {expediaBenchmarks.accuracy.responseAccuracy}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      Intent Detection
+                    </div>
+                    <div className="text-2xl font-light text-green-400">
+                      {expediaBenchmarks.accuracy.intentDetection}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      Hallucination Rate
+                    </div>
+                    <div className="text-2xl font-light text-green-400">
+                      {expediaBenchmarks.accuracy.hallucinationRate}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Conversion Metrics */}
+              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+                <h4 className="text-sm font-medium text-purple-300 mb-4 flex items-center">
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  Conversion
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      GPT → Platform
+                    </div>
+                    <div className="text-2xl font-light text-purple-400">
+                      {expediaBenchmarks.conversion.gptToPlatformHandoff}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      Platform CVR
+                    </div>
+                    <div className="text-2xl font-light text-purple-400">
+                      {expediaBenchmarks.conversion.platformConversion}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      Overall CVR
+                    </div>
+                    <div className="text-2xl font-light text-purple-400">
+                      {expediaBenchmarks.conversion.overallCVR}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Safety Metrics */}
+              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+                <h4 className="text-sm font-medium text-amber-300 mb-4 flex items-center">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Safety
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      Content Filter
+                    </div>
+                    <div className="text-2xl font-light text-green-400">
+                      {expediaBenchmarks.safety.contentFilterRate}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      Injection Block
+                    </div>
+                    <div className="text-2xl font-light text-green-400">
+                      {expediaBenchmarks.safety.promptInjectionBlock}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">GDPR</div>
+                    <div className="text-2xl font-light text-green-400">
+                      {expediaBenchmarks.safety.privacyCompliance}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Retention Metrics */}
+              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+                <h4 className="text-sm font-medium text-rose-300 mb-4 flex items-center">
+                  <Clock className="w-4 h-4 mr-2" />
+                  Retention
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      7-Day Retention
+                    </div>
+                    <div className="text-2xl font-light text-rose-400">
+                      {expediaBenchmarks.retention.day7Retention}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">
+                      30-Day Retention
+                    </div>
+                    <div className="text-2xl font-light text-rose-400">
+                      {expediaBenchmarks.retention.day30Retention}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 text-xs mb-1">CSAT</div>
+                    <div className="text-2xl font-light text-rose-400">
+                      {expediaBenchmarks.retention.customerSatisfaction}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Key Insights */}
+            <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-xl p-8 border border-blue-700/50">
+              <h3 className="text-2xl font-light mb-6">
+                🎯 Key Insights for Porsche
+              </h3>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h4 className="font-medium text-blue-300 mb-4">
+                    What Expedia Did Right
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong className="text-white">
+                          Real-time data integration:
+                        </strong>
+                        <p className="text-sm text-slate-300 mt-1">
+                          Not just information - actual booking capabilities
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong className="text-white">
+                          Seamless handoff:
+                        </strong>
+                        <p className="text-sm text-slate-300 mt-1">
+                          42% of users transition from GPT to platform
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong className="text-white">
+                          100% share of voice:
+                        </strong>
+                        <p className="text-sm text-slate-300 mt-1">
+                          Went from zero visibility to dominant presence
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-medium text-purple-300 mb-4">
+                    How We Apply This to Porsche
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-start">
+                      <Zap className="w-5 h-5 text-purple-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong className="text-white">
+                          Enable action, not just info:
+                        </strong>
+                        <p className="text-sm text-slate-300 mt-1">
+                          Direct link to configurator, not just color
+                          descriptions
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <Zap className="w-5 h-5 text-purple-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong className="text-white">
+                          Track everything:
+                        </strong>
+                        <p className="text-sm text-slate-300 mt-1">
+                          Every conversation = data on customer preferences
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <Zap className="w-5 h-5 text-purple-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong className="text-white">Speed to market:</strong>
+                        <p className="text-sm text-slate-300 mt-1">
+                          BMW/Mercedes will copy if Porsche waits too long
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* PARTNERSHIP MODEL TAB */}
+        {activeTab === "partnership" && (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-light mb-4">Partnership Model</h2>
+              <p className="text-slate-400 mb-8">
+                Three-phase journey from project collaboration to SaaS platform
+                company
+              </p>
+            </div>
+
+            {/* Phase Selector */}
+            <div className="flex gap-4 mb-8">
+              {[
+                { id: 0, label: "Phase 1: Project", color: "bg-green-600" },
+                { id: 1, label: "Phase 2: Agency", color: "bg-blue-600" },
+                {
+                  id: 2,
+                  label: "Phase 3: SaaS Platform",
+                  color: "bg-purple-600",
+                },
+              ].map((phase) => (
+                <button
+                  key={phase.id}
+                  onClick={() => setSelectedPhase(phase.id)}
+                  className={`flex-1 p-4 rounded-lg border-2 transition-all ${
+                    selectedPhase === phase.id
+                      ? `${phase.color} border-white shadow-lg`
+                      : "border-slate-700 bg-slate-800/30 hover:border-slate-600"
+                  }`}
+                >
+                  <div className="font-medium">{phase.label}</div>
+                </button>
+              ))}
+            </div>
+
+            {/* Phase 1: Project Mode */}
+            {selectedPhase === 0 && (
+              <div className="space-y-6">
+                <div className="bg-green-900/20 border border-green-700/50 rounded-xl p-8">
+                  <h3 className="text-2xl font-light mb-4 flex items-center">
+                    <Award className="w-6 h-6 mr-3" />
+                    Phase 1: Project Mode (Dec 2024 - Jan 2025)
+                  </h3>
+                  <p className="text-slate-300 mb-6">
+                    Test working relationship and market demand with Porsche
+                    pilot project
+                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-medium text-green-300 mb-4">
+                        Structure
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">
+                              Relationship:
+                            </strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              Project-based collaboration, no equity
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">
+                              Compensation:
+                            </strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              50/50 profit split after costs (€28K-31K each)
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">Timeline:</strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              8 weeks (Dec 1 - Jan 31)
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">Commitment:</strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              Ahmed: 30-35 hrs/week | Francesca: Sales & PM
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-green-300 mb-4">
+                        Success Criteria
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start">
+                          <Target className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">Delivery:</strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              Porsche Tier 1 delivered on time, to spec
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <Target className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">
+                              Client Satisfaction:
+                            </strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              Porsche happy enough to recommend us
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <Target className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">
+                              Working Relationship:
+                            </strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              Good communication, mutual respect, aligned goals
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <Target className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">Pipeline:</strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              2-3 additional prospects identified
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 p-4 bg-slate-900/50 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm text-slate-400 mb-1">
+                          Phase 1 Revenue
+                        </div>
+                        <div className="text-2xl font-light text-green-400">
+                          €86,580 - €98,280
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm text-slate-400 mb-1">
+                          Each Partner
+                        </div>
+                        <div className="text-xl font-light">€28K - €31K</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Phase 2: Agency Mode */}
+            {selectedPhase === 1 && (
+              <div className="space-y-6">
+                <div className="bg-blue-900/20 border border-blue-700/50 rounded-xl p-8">
+                  <h3 className="text-2xl font-light mb-4 flex items-center">
+                    <Briefcase className="w-6 h-6 mr-3" />
+                    Phase 2: Full-Time Agency (Feb 2025 - Dec 2025)
+                  </h3>
+                  <p className="text-slate-300 mb-6">
+                    Scale to 10-20 luxury brand clients with dedicated agency
+                    team
+                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-medium text-blue-300 mb-4">
+                        Structure
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">
+                              Relationship:
+                            </strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              Formal partnership with equity
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">
+                              Equity Split:
+                            </strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              Francesca 51% | Ahmed 49%
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">
+                              Compensation:
+                            </strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              £60-80K salary + profit share/dividends
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">Timeline:</strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              12 months (Feb 2025 - Jan 2026)
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">Commitment:</strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              Both full-time (40+ hours/week)
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-blue-300 mb-4">
+                        Team & Roles
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="p-3 bg-slate-900/50 rounded">
+                          <div className="font-medium text-white mb-1">
+                            Francesca - CEO/Co-Founder
+                          </div>
+                          <div className="text-sm text-slate-300">
+                            Sales, BD, client relationships, strategy
+                          </div>
+                        </div>
+                        <div className="p-3 bg-slate-900/50 rounded">
+                          <div className="font-medium text-white mb-1">
+                            Ahmed - CTO/Co-Founder
+                          </div>
+                          <div className="text-sm text-slate-300">
+                            Product development, technical delivery,
+                            architecture
+                          </div>
+                        </div>
+                        <div className="p-3 bg-slate-900/50 rounded">
+                          <div className="font-medium text-white mb-1">
+                            Backend Developer (Contract)
+                          </div>
+                          <div className="text-sm text-slate-300">
+                            Part-time support for technical delivery
+                          </div>
+                        </div>
+                        <div className="p-3 bg-slate-900/50 rounded">
+                          <div className="font-medium text-white mb-1">
+                            UI/UX Designer (Contract)
+                          </div>
+                          <div className="text-sm text-slate-300">
+                            As-needed for client projects
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid md:grid-cols-3 gap-4">
+                    <div className="p-4 bg-slate-900/50 rounded-lg">
+                      <div className="text-sm text-slate-400 mb-1">
+                        Target Clients
+                      </div>
+                      <div className="text-2xl font-light text-blue-400">
+                        10-20
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        Luxury brands
+                      </div>
+                    </div>
+                    <div className="p-4 bg-slate-900/50 rounded-lg">
+                      <div className="text-sm text-slate-400 mb-1">
+                        ARR Target
+                      </div>
+                      <div className="text-2xl font-light text-blue-400">
+                        £500K
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        Annual recurring revenue
+                      </div>
+                    </div>
+                    <div className="p-4 bg-slate-900/50 rounded-lg">
+                      <div className="text-sm text-slate-400 mb-1">
+                        Team Size
+                      </div>
+                      <div className="text-2xl font-light text-blue-400">
+                        4-6
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        2 full-time, 2-4 contractors
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Success Metrics */}
+                <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                  <h4 className="font-medium mb-4">Phase 2 Success Criteria</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong>£500K ARR</strong>
+                        <p className="text-sm text-slate-400">
+                          10-20 active clients
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong>Profitable Operations</strong>
+                        <p className="text-sm text-slate-400">
+                          Sustainable salaries for both
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong>Repeatable Process</strong>
+                        <p className="text-sm text-slate-400">
+                          Standardized delivery framework
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong>Case Studies</strong>
+                        <p className="text-sm text-slate-400">
+                          3-5 referenceable clients
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Phase 3: SaaS Platform */}
+            {selectedPhase === 2 && (
+              <div className="space-y-6">
+                <div className="bg-purple-900/20 border border-purple-700/50 rounded-xl p-8">
+                  <h3 className="text-2xl font-light mb-4 flex items-center">
+                    <Building className="w-6 h-6 mr-3" />
+                    Phase 3: SaaS Platform (2026+)
+                  </h3>
+                  <p className="text-slate-300 mb-6">
+                    White-label platform enabling marketing agencies to deliver
+                    AI visibility at scale
+                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-medium text-purple-300 mb-4">
+                        Platform Vision
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start">
+                          <Zap className="w-5 h-5 text-purple-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">
+                              Multi-Tenant SaaS
+                            </strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              One platform, 500+ agency customers
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <Zap className="w-5 h-5 text-purple-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">White-Label</strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              Agencies brand it as their own solution
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <Zap className="w-5 h-5 text-purple-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">
+                              No-Code Builder
+                            </strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              Agencies create Custom GPTs without developers
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <Zap className="w-5 h-5 text-purple-400 mr-3 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <strong className="text-white">
+                              Subscription Model
+                            </strong>
+                            <p className="text-sm text-slate-300 mt-1">
+                              £497-£2,997/month per agency
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-purple-300 mb-4">
+                        Monetization
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="p-3 bg-slate-900/50 rounded">
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="font-medium text-white">
+                              Starter Tier
+                            </div>
+                            <div className="text-purple-400 font-medium">
+                              £497/mo
+                            </div>
+                          </div>
+                          <div className="text-xs text-slate-400">
+                            1 brand, 1K conversations/month
+                          </div>
+                        </div>
+                        <div className="p-3 bg-slate-900/50 rounded">
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="font-medium text-white">
+                              Professional
+                            </div>
+                            <div className="text-purple-400 font-medium">
+                              £997/mo
+                            </div>
+                          </div>
+                          <div className="text-xs text-slate-400">
+                            5 brands, 10K conversations/month
+                          </div>
+                        </div>
+                        <div className="p-3 bg-purple-900/30 rounded border border-purple-700/50">
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="font-medium text-white">
+                              Enterprise
+                            </div>
+                            <div className="text-purple-400 font-medium">
+                              £2,997/mo
+                            </div>
+                          </div>
+                          <div className="text-xs text-slate-400">
+                            Unlimited brands, 100K conversations/month
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Revenue Projections */}
+                  <div className="mt-6">
+                    <h4 className="font-medium text-purple-300 mb-4">
+                      Revenue Projections
+                    </h4>
+                    <div className="grid md:grid-cols-4 gap-4">
+                      <div className="p-4 bg-slate-900/50 rounded-lg">
+                        <div className="text-sm text-slate-400 mb-1">
+                          Month 12
+                        </div>
+                        <div className="text-2xl font-light text-purple-400">
+                          £120K
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          10 agencies @ £997/mo
+                        </div>
+                      </div>
+                      <div className="p-4 bg-slate-900/50 rounded-lg">
+                        <div className="text-sm text-slate-400 mb-1">
+                          Month 18
+                        </div>
+                        <div className="text-2xl font-light text-purple-400">
+                          £598K
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          50 agencies
+                        </div>
+                      </div>
+                      <div className="p-4 bg-slate-900/50 rounded-lg">
+                        <div className="text-sm text-slate-400 mb-1">
+                          Month 24
+                        </div>
+                        <div className="text-2xl font-light text-purple-400">
+                          £2.25M
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          150 agencies (mixed tiers)
+                        </div>
+                      </div>
+                      <div className="p-4 bg-purple-900/30 rounded-lg border border-purple-700/50">
+                        <div className="text-sm text-slate-400 mb-1">
+                          Year 3
+                        </div>
+                        <div className="text-2xl font-light text-purple-400">
+                          £10M+
+                        </div>
+                        <div className="text-xs text-slate-500">Target ARR</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Platform Features */}
+                <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                  <h4 className="font-medium mb-4">Platform Features</h4>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div>
+                      <h5 className="text-sm font-medium text-purple-300 mb-3">
+                        For Marketing Agencies
+                      </h5>
+                      <div className="space-y-2 text-sm text-slate-300">
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          Multi-brand management dashboard
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          White-label branding (logo, colors, domain)
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          Client onboarding workflows
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          Usage analytics and reporting
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          Subscription billing management
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <h5 className="text-sm font-medium text-purple-300 mb-3">
+                        For End Brands
+                      </h5>
+                      <div className="space-y-2 text-sm text-slate-300">
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          Custom GPT deployment automation
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          No-code conversation designer
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          Brand asset management
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          Performance dashboards
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          CRM/e-commerce integrations
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <h5 className="text-sm font-medium text-purple-300 mb-3">
+                        Technical Platform
+                      </h5>
+                      <div className="space-y-2 text-sm text-slate-300">
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          Multi-tenant architecture
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          Auto-scaling infrastructure
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          99.9% SLA uptime
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          GDPR/SOC2 compliance
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
+                          API marketplace for extensions
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Investment Required */}
+                <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-xl p-6 border border-purple-700/50">
+                  <h4 className="font-medium text-purple-300 mb-4">
+                    Investment & Timeline
+                  </h4>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <div className="text-3xl font-light mb-1 text-purple-400">
+                        £254K
+                      </div>
+                      <div className="text-sm text-slate-400">
+                        Development Cost
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-light mb-1 text-purple-400">
+                        8 weeks
+                      </div>
+                      <div className="text-sm text-slate-400">
+                        Build Timeline
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-light mb-1 text-purple-400">
+                        Month 16
+                      </div>
+                      <div className="text-sm text-slate-400">
+                        Break-Even Point
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Partnership Principles */}
+            <div className="bg-slate-800/50 rounded-xl p-8 border border-slate-700">
+              <h3 className="text-2xl font-light mb-6">
+                Partnership Principles
+              </h3>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h4 className="font-medium text-blue-300 mb-4 flex items-center">
+                    <Users className="w-5 h-5 mr-2" />
+                    Working Together
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-slate-900/50 rounded">
+                      <strong className="text-white">Win-Win Mentality</strong>
+                      <p className="text-sm text-slate-400 mt-1">
+                        Fair value exchange, transparent pricing, client success
+                        = our success
+                      </p>
+                    </div>
+                    <div className="p-3 bg-slate-900/50 rounded">
+                      <strong className="text-white">Long-Term Thinking</strong>
+                      <p className="text-sm text-slate-400 mt-1">
+                        Building sustainable advantages, quality over quick wins
+                      </p>
+                    </div>
+                    <div className="p-3 bg-slate-900/50 rounded">
+                      <strong className="text-white">
+                        Complementary Strengths
+                      </strong>
+                      <p className="text-sm text-slate-400 mt-1">
+                        Francesca: Strategy, sales | Ahmed: Technical, product
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-medium text-green-300 mb-4 flex items-center">
+                    <CheckCircle2 className="w-5 h-5 mr-2" />
+                    Commitments
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-slate-900/50 rounded">
+                      <strong className="text-white">
+                        Transparent Communication
+                      </strong>
+                      <p className="text-sm text-slate-400 mt-1">
+                        Weekly updates, honest about blockers, no surprises
+                      </p>
+                    </div>
+                    <div className="p-3 bg-slate-900/50 rounded">
+                      <strong className="text-white">
+                        Mutual Accountability
+                      </strong>
+                      <p className="text-sm text-slate-400 mt-1">
+                        Both deliver on commitments, own our domains
+                      </p>
+                    </div>
+                    <div className="p-3 bg-slate-900/50 rounded">
+                      <strong className="text-white">Quarterly Reviews</strong>
+                      <p className="text-sm text-slate-400 mt-1">
+                        Regular check-ins on metrics, goals, and working
+                        relationship
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer */}
@@ -2941,16 +4397,15 @@ const ComprehensivePTSVisualizer = () => {
         <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="text-sm text-slate-400">
-              Porsche PTS Concierge • AI Visibility Proposal: Custom GPT +
-              Conversational Platform
+              Porsche PTS Concierge • Complete Client Proposal
             </div>
             <div className="flex items-center gap-6 text-sm text-slate-400">
               <div>Two-Platform Strategy</div>
               <div>•</div>
-              <div>5 Journeys • 30 Steps</div>
+              <div>3 Pricing Tiers</div>
               <div>•</div>
               <div className="text-green-400 font-medium">
-                1,227% ROI Year 1
+                ROI: 2,166% - 7,532%
               </div>
             </div>
           </div>
