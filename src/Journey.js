@@ -1053,9 +1053,12 @@ const ComprehensivePTSVisualizer = () => {
         <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-light mb-2 tracking-tight">
-                🏎️ Porsche PTS Concierge
-              </h1>
+              <div className="flex items-center">
+                <img src="logo512.png" alt="Logo" className="w-16 h-16" />
+                <h1 className="text-4xl font-light mb-2 tracking-tight">
+                  Porsche PTS Concierge
+                </h1>
+              </div>
               <p className="text-slate-400 text-lg">
                 Complete Client Proposal: Custom GPT + Conversational Platform
               </p>
