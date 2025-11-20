@@ -9,6 +9,17 @@ const Demo = () => {
   const [isDemoComplete, setIsDemoComplete] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // Image paths for actual Porsche PTS colors
+  const carImages = {
+    guardsred: "/images/pts-911-in-Guardsred.png",
+    lightergreen: "/images/pts-911-in-Lightergreen.png",
+    acidgreen911: "/images/pts-911-in-Acidgreen.png",
+    acidgreenTaycan: "/images/pts-taycan-in-Acidgreen.png",
+    ipanemablue: "/images/pts-taycan-in-Ipanemabluemetallic.png",
+    amazonasgruen: "/images/pts-taycan-in-Amazonasgruenmetallic.png",
+    parliamentgrey: "/images/pts-macan-in-Parliamentgreymetallic.png",
+  };
+
   const scenarios = [
     // Stage 1: Discovery on GPT
     {
@@ -31,11 +42,11 @@ const Demo = () => {
       messages: [
         {
           type: "ai",
-          text: "Great choice! Heritage colors are iconic shades from Porsche's history. Each tells a story. For example, Rubystar from the 90s or Irish Green from the 70s. What era resonates with you?",
+          text: "Great choice! Heritage colors are iconic shades from Porsche's history. Each tells a story. For example, Guards Red - the iconic racing red, or Lighter Green from the 70s. What era resonates with you?",
         },
         {
           type: "user",
-          text: "I love 90s Porsche aesthetics - bold but timeless.",
+          text: "I love classic racing colors - bold but timeless.",
         },
       ],
     },
@@ -45,16 +56,17 @@ const Demo = () => {
       messages: [
         {
           type: "ai",
-          text: "Perfect! Based on your 90s preference, here are some iconic heritage colors:",
+          text: "Perfect! Based on your preference for classic racing heritage, here's an iconic color:",
           color: {
-            name: "Rubystar Neo",
-            hex: "#8B0000",
-            desc: "Deep metallic red from the 964 era",
+            name: "Guards Red",
+            code: "Y39",
+            desc: "The iconic Porsche racing red, synonymous with motorsport heritage since the 1960s",
+            image: carImages.guardsred,
           },
         },
         {
           type: "user",
-          text: "Rubystar looks amazing! How does it look in different lighting?",
+          text: "Guards Red looks amazing! How does it look in different lighting?",
         },
       ],
     },
@@ -65,11 +77,17 @@ const Demo = () => {
       messages: [
         {
           type: "ai",
-          text: "Rubystar is stunning! It shifts from deep burgundy in shade to brilliant red in direct sunlight. The metallic finish creates incredible depth on the 911's curves.",
+          text: "Guards Red is stunning! It shifts from deep burgundy in shade to brilliant red in direct sunlight. The metallic finish creates incredible depth on the 911's curves. Here's another option you might love:",
+          color: {
+            name: "Lighter Green",
+            code: "227",
+            desc: "A refreshing mint green that captures 1970s Porsche sophistication",
+            image: carImages.lightergreen,
+          },
         },
         {
           type: "user",
-          text: "This is exactly what I want. How do I proceed?",
+          text: "Both are beautiful! I think I prefer Guards Red. How do I proceed?",
         },
       ],
     },
@@ -102,11 +120,11 @@ const Demo = () => {
       messages: [
         {
           type: "ai",
-          text: "Welcome to Porsche! I've loaded your color preferences from our conversation. Let's finalize your Rubystar selection. Would you like to see it on different 911 configurations?",
+          text: "Welcome to Porsche! I've loaded your color preferences from our conversation. Let's finalize your Guards Red selection. Would you like to see other bold PTS options?",
         },
         {
           type: "user",
-          text: "Yes, show me Rubystar on 911 GTS Coupe vs Cabriolet",
+          text: "Sure, show me something modern and electric",
         },
       ],
     },
@@ -116,11 +134,17 @@ const Demo = () => {
       messages: [
         {
           type: "ai",
-          text: "Here's Rubystar on both variants. The Coupe emphasizes the metallic depth with its sleek roofline, while the Cabriolet shows more color variation with the top down. Both are stunning choices!",
+          text: "Here's Acid Green on both the 911 and Taycan - perfect for making a bold, modern statement:",
+          color: {
+            name: "Acid Green",
+            code: "2M8",
+            desc: "Electric lime that represents Porsche's bold future",
+            image: carImages.acidgreenTaycan,
+          },
         },
         {
           type: "user",
-          text: "I'll go with the GTS Coupe. What interior works best?",
+          text: "Wow! But I'll stick with Guards Red for the 911. What interior works best?",
         },
       ],
     },
@@ -130,7 +154,7 @@ const Demo = () => {
       messages: [
         {
           type: "ai",
-          text: "Perfect! For Rubystar, I recommend Bordeaux Red leather interior (classic complementary contrast) or Slate Grey (modern sophistication). Both create stunning combinations with 92%+ harmony scores.",
+          text: "Perfect! For Guards Red, I recommend Bordeaux Red leather interior (classic complementary contrast) or Slate Grey (modern sophistication). Both create stunning combinations with 92%+ harmony scores.",
         },
         {
           type: "user",
@@ -144,7 +168,7 @@ const Demo = () => {
       messages: [
         {
           type: "ai",
-          text: "✅ Excellent! Your configuration:\n\n• 911 GTS Coupe\n• Rubystar Neo (PTS)\n• Bordeaux Red Full Leather\n• Gloss Black Wheels\n\nI'm preparing your dealer handover with all preferences. Your local Porsche Centre will contact you within 24 hours to finalize your build!",
+          text: "✅ Excellent! Your configuration:\n\n• 911 Carrera S Coupe\n• Guards Red (Y39) PTS\n• Bordeaux Red Full Leather\n• 20\" Carrera S Wheels\n\nI'm preparing your dealer handover with all preferences. Your local Porsche Centre will contact you within 24 hours to finalize your build!",
         },
         { type: "user", text: "Perfect, thank you!" },
       ],
@@ -234,12 +258,30 @@ const Demo = () => {
           {message.text}
           {message.color && (
             <div className="color-card">
+              {message.color.image ? (
+                <img
+                  src={message.color.image}
+                  alt={message.color.name}
+                  className="car-image"
+                  onError={(e) => {
+                    // Fallback to color swatch if image fails to load
+                    e.target.style.display = "none";
+                    e.target.nextSibling.style.display = "block";
+                  }}
+                />
+              ) : null}
               <div
-                className="color-swatch"
-                style={{ background: message.color.hex }}
+                className="color-swatch-fallback"
+                style={{
+                  display: "none",
+                  background: message.color.hex || "#666",
+                }}
               ></div>
               <div className="color-info">
                 <h4>{message.color.name}</h4>
+                {message.color.code && (
+                  <div className="color-code">Code: {message.color.code}</div>
+                )}
                 <p>{message.color.desc}</p>
               </div>
             </div>
@@ -454,8 +496,8 @@ const Demo = () => {
         }
 
         .color-card {
-          display: grid;
-          grid-template-columns: 80px 1fr;
+          display: flex;
+          flex-direction: column;
           gap: 12px;
           margin-top: 12px;
           padding: 12px;
@@ -464,22 +506,48 @@ const Demo = () => {
           border: 1px solid rgba(148, 163, 184, 0.1);
         }
 
-        .color-swatch {
-          width: 80px;
-          height: 80px;
+        .car-image {
+          width: 100%;
+          height: auto;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+          object-fit: cover;
+        }
+
+        .color-swatch-fallback {
+          width: 100%;
+          height: 120px;
           border-radius: 8px;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
+        .color-info {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
         .color-info h4 {
-          font-size: 0.875rem;
+          font-size: 1rem;
           font-weight: 600;
           margin-bottom: 4px;
         }
 
-        .color-info p {
+        .color-code {
           font-size: 0.75rem;
-          color: rgba(148, 163, 184, 0.8);
+          color: rgba(148, 163, 184, 0.9);
+          font-family: monospace;
+          background: rgba(0, 0, 0, 0.3);
+          padding: 2px 8px;
+          border-radius: 4px;
+          display: inline-block;
+          width: fit-content;
+        }
+
+        .color-info p {
+          font-size: 0.875rem;
+          color: rgba(226, 232, 240, 0.9);
+          line-height: 1.4;
         }
 
         .typing-indicator {
